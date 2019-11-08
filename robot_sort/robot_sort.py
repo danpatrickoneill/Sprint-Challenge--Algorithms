@@ -81,30 +81,77 @@ class SortingRobot:
         Turn on the robot's light
         """
         self._light = "ON"
+
     def set_light_off(self):
         """
         Turn off the robot's light
         """
         self._light = "OFF"
+
     def light_is_on(self):
         """
         Returns True if the robot's light is on and False otherwise.
         """
         return self._light == "ON"
+    """
+    New methods start here
+    """
+
+    def compare_next_item(self):
+        """
+        Performs "bubble sort" functionality with an item already held; moves right, compares items, swaps if needed, moves left and places the held item, moves right and picks up the item there.
+        """
+        self.move_right()
+        if self.compare_item() <= 0:
+            self.move_left()
+            self.swap_item()
+            self.move_right()
+            self.swap_item()
+        else:
+            self.swap_item()
+            self.set_light_off()
+            self.move_left()
+            self.swap_item()
+            self.move_right()
+            self.swap_item()
 
     def sort(self):
         """
         Sort the robot's list.
         """
-        # Fill this out
-        pass
+        """
+        How is this robot going to sort this list?
+        My robot (beta version) is a bubble sort robot. It picks up the first item, moves right, and compares the items; if the held item is lesser than or equal, the robot moves left, drops the item, moves right, picks up the item, and continues; if the held item is greater, it swaps them, moves left, sets the lesser item down, moves right, picks up the item, and continues. The robot's light is used to determine whether the list is sorted; the light is turned on at the start of each sort attempt and is turned off whenever a swap is made, so if it reaches the end of the list with the light still on, the sort is complete.
+
+        For future versions:
+        I considered trying to implement a merge sort, since you can definitely look at this data as a bunch of individual lists to be merged. I could get it to a list of sorted pairs easily enough I think; but I couldn't nail down a way for my robot to have enough info to successfully merge the lists from there.
+
+        Similarly for quicksort, it was an appealing option at the start but the limited capabilities of the robot to hold onto any specific value rather than just comparing what it's holding to what's in front of it meant I never really got started down that road.
+        """
+        while self.can_move_left():
+            self.move_left()
+        if not self.can_move_right():
+            return "List sorted successfully!"
+        self.swap_item()
+        self.set_light_on()
+        while self.can_move_right():
+            self.compare_next_item()
+        if self.light_is_on():
+            self.swap_item()
+            return "List sorted successfully!"
+        else:
+            self.swap_item()
+            while self.can_move_left():
+                self.move_left()
+            self.sort()
 
 
 if __name__ == "__main__":
     # Test our your implementation from the command line
     # with `python robot_sort.py`
 
-    l = [15, 41, 58, 49, 26, 4, 28, 8, 61, 60, 65, 21, 78, 14, 35, 90, 54, 5, 0, 87, 82, 96, 43, 92, 62, 97, 69, 94, 99, 93, 76, 47, 2, 88, 51, 40, 95, 6, 23, 81, 30, 19, 25, 91, 18, 68, 71, 9, 66, 1, 45, 33, 3, 72, 16, 85, 27, 59, 64, 39, 32, 24, 38, 84, 44, 80, 11, 73, 42, 20, 10, 29, 22, 98, 17, 48, 52, 67, 53, 74, 77, 37, 63, 31, 7, 75, 36, 89, 70, 34, 79, 83, 13, 57, 86, 12, 56, 50, 55, 46]
+    l = [15, 41, 58, 49, 26, 4, 28, 8, 61, 60, 65, 21, 78, 14, 35, 90, 54, 5, 0, 87, 82, 96, 43, 92, 62, 97, 69, 94, 99, 93, 76, 47, 2, 88, 51, 40, 95, 6, 23, 81, 30, 19, 25, 91, 18, 68, 71, 9, 66, 1,
+         45, 33, 3, 72, 16, 85, 27, 59, 64, 39, 32, 24, 38, 84, 44, 80, 11, 73, 42, 20, 10, 29, 22, 98, 17, 48, 52, 67, 53, 74, 77, 37, 63, 31, 7, 75, 36, 89, 70, 34, 79, 83, 13, 57, 86, 12, 56, 50, 55, 46]
 
     robot = SortingRobot(l)
 
